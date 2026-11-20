@@ -3,7 +3,7 @@ from sqlalchemy import text
 from app.database.connection import engine
 from app.routes.auth import router as auth_router
 from app.routes.profiles import router as profiles_router
-
+from app.routes.documents import router as documents_router
 app = FastAPI(
     title="Document Understanding API",
     description="An API for document understanding and information extraction.",
@@ -12,6 +12,7 @@ app = FastAPI(
 
 app.include_router(auth_router)
 app.include_router(profiles_router)
+app.include_router(documents_router)
 
 @app.get("/")
 def home():

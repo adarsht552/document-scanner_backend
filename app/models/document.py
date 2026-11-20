@@ -1,10 +1,14 @@
 
+import uuid
+
 from sqlalchemy import (
-    Column, String, Text, DateTime, ForeignKey
+    Column,
+    Text,
+    BigInteger,
+    DateTime,
+    func
 )
 from sqlalchemy.dialects.postgresql import UUID, JSONB
-from sqlalchemy.sql import func
-import uuid
 
 from app.database.base import Base
 
@@ -18,35 +22,48 @@ class Document(Base):
         default=uuid.uuid4
     )
 
-    user_id = Column(
-        UUID(as_uuid=True),
-        ForeignKey("auth.users.id", ondelete="CASCADE"),
-        nullable=False,
-        index=True
-    )
+    user_id = Column(UUID(as_uuid=True), nullable=False, index=True)
 
-    file_name = Column(String(255), nullable=False)
+    title = Column(Text, nullable=False)
+    document_type = Column(Text, nullable=False)
+
+    file_name = Column(Text, nullable=False)
     file_path = Column(Text, nullable=False)
-    file_type = Column(String(50))
-    category = Column(String(100))
-    subcategory = Column(String(100))
+    file_type = Column(Text)
+    file_size = Column(BigInteger)
 
-    extracted_data = Column(JSONB, default=dict)
-    summary = Column(Text)
-    full_text = Column(Text)
-
-    processing_status = Column(
-        String(50),
-        default="pending"
+    extracted_data = Column(
+        JSONB,
+        nullable=False,
+        default=dict
     )
+    processing_status = Column(
+    Text,
+    nullable=False,
+    default="pending",
+    server_default="pending"
+    )
+
+
+    description = Column(Text)
 
     created_at = Column(
         DateTime(timezone=True),
-        server_default=func.now()
+        server_default=func.now(),
+        nullable=False
     )
 
     updated_at = Column(
         DateTime(timezone=True),
         server_default=func.now(),
-        onupdate=func.now()
+        onupdate=func.now(),
+        nullable=False
     )
+
+
+processing_status = Column(
+    Text,
+    nullable=False,
+    default="pending",
+    server_default="pending"
+)
